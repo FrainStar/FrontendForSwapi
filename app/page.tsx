@@ -5,27 +5,58 @@
 // https://swapi.dev/ - ПРОЕКТ ЗВЕЗДНЫЙ ВОЙНЫ НА next js ts template using daisyui
 // с использованием апи swapi.
 
+import MainLayout from './components/MainLayout';
 import Link from 'next/link';
 
 export default function Home() {
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-4xl font-bold text-center mb-8">Star Wars Universe</h1>
-            <div className="flex justify-center space-x-4">
-                {/* Ссылка на страницу персонажей */}
-                <Link href="/characters">
-                    <div className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-                        Characters
+        <MainLayout>
+            <div className="max-w-4xl mx-auto text-center">
+                <h1 className="text-5xl font-bold mb-8">Welcome to Star Wars Explorer</h1>
+                <div className="card bg-base-200 shadow-xl p-6 mb-8">
+                    <p className="text-xl mb-6">
+                        Explore the vast universe of Star Wars with our comprehensive database of characters and planets.
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="card bg-base-100 shadow-lg">
+                            <div className="card-body">
+                                <h2 className="card-title text-2xl mb-4">Characters</h2>
+                                <p className="mb-4">
+                                    Discover detailed information about your favorite Star Wars characters,
+                                    including their physical characteristics, origins, and more.
+                                </p>
+                                <div className="card-actions justify-end">
+                                    <Link href="/characters" className="btn btn-primary">
+                                        Explore Characters
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card bg-base-100 shadow-lg">
+                            <div className="card-body">
+                                <h2 className="card-title text-2xl mb-4">Planets</h2>
+                                <p className="mb-4">
+                                    Learn about the diverse worlds of the Star Wars galaxy,
+                                    their climates, populations, and unique characteristics.
+                                </p>
+                                <div className="card-actions justify-end">
+                                    <Link href="/planets" className="btn btn-primary">
+                                        Explore Planets
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </Link>
-
-                {/* Ссылка на страницу планет */}
-                <Link href="/planets">
-                    <div className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300">
-                        Planets
-                    </div>
-                </Link>
+                </div>
+                <div className="card bg-base-200 shadow-xl p-6">
+                    <h2 className="text-2xl font-bold mb-4">About the Project</h2>
+                    <p className="text-lg">
+                        This project uses the SWAPI (Star Wars API) to provide you with accurate and detailed
+                        information about the Star Wars universe. Built with Next.js and TypeScript,
+                        it offers a modern and responsive interface for exploring Star Wars data.
+                    </p>
+                </div>
             </div>
-        </div>
+        </MainLayout>
     );
 }

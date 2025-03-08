@@ -1,28 +1,75 @@
-import { notFound } from 'next/navigation';
+"use client";
 
-async function getPlanet(id: string) {
-    const res = await fetch(`https://swapi.dev/api/planets/${id}`);
-    if (!res.ok) return undefined;
-    return res.json();
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Planet } from '../../types/swapi';
+import MainLayout from '../../components/MainLayout';
+
+interface PageProps {
+    params: Promise<{ id: string }>;
 }
 
-export default async function PlanetPage({ params }: { params: { id: string } }) {
-    const planet = await getPlanet(params.id);
-    if (!planet) notFound();
+export default function PlanetDetails({ params }: PageProps) {
+    const router = useRouter();
+    const [planet, setPlanet] = useState<Planet | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPlanet = async () => {
+            try {
+                const id = await params.then(p => p.id);
+                const res = await fetch(`https://swapi.dev/api/planets/${id}`);
+                const data = await res.json();
+                setPlanet(data);
+            } catch (error) {
+                console.error('Error fetching planet:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPlanet();
+    }, [params]);
+
+    if (loading) {
+        return (
+            <MainLayout>
+                <div className="flex justify-center items-center min-h-[50vh]">
+                    <span className="loading loading-spinner loading-lg"></span>
+                </div>
+            </MainLayout>
+        );
+    }
+
+    if (!planet) {
+        return (
+            <MainLayout>
+                <div className="alert alert-error">
+                    <span>Planet not found</span>
+                </div>
+            </MainLayout>
+        );
+    }
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-4xl font-bold text-center mb-8">{planet.name}</h1>
-            <div className="card bg-base-200 shadow-xl max-w-2xl mx-auto">
+        <MainLayout>
+            <div className="flex justify-between items-center mb-8">
+                <button 
+                    onClick={() => router.back()} 
+                    className="btn btn-primary"
+                >
+                    ← Back
+                </button>
+            </div>
+            <div className="card bg-base-200 shadow-xl">
                 <div className="card-body">
-                    <p>Climate: {planet.climate}</p>
-                    <p>Population: {planet.population}</p>
-                    <p>Terrain: {planet.terrain}</p>
-                    <p>Diameter: {planet.diameter}</p>
-                    <p>Gravity: {planet.gravity}</p>
-                    <p>Rotation Period: {planet.rotation_period}</p>
+                    <h2 className="card-title text-3xl mb-4">{planet.name}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p><span className="font-bold">Climate:</span> {planet.climate}</p>
+                        <p><span className="font-bold">Population:</span> {planet.population}</p>
+                        <p><span className="font-bold">Terrain:</span> {planet.terrain}</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </MainLayout>
     );
 }

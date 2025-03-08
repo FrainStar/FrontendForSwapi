@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../components/Pagination';
 import SearchFilter from '../components/SearchFilter';
 import { Planet, SWAPIResponse } from '../types/swapi';
+import MainLayout from '../components/MainLayout';
 
 export default function PlanetsClient({ data }: { data: SWAPIResponse<Planet> }) {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function PlanetsClient({ data }: { data: SWAPIResponse<Planet> })
     useEffect(() => {
         const fetchPlanets = async () => {
             const res = await fetch(`/api/planets?page=${currentPage}&search=${search}`);
-            const newData = await res.json();
+            const newData: SWAPIResponse<Planet> = await res.json();
             setPlanets(newData.results);
         };
         fetchPlanets();
@@ -39,7 +40,7 @@ export default function PlanetsClient({ data }: { data: SWAPIResponse<Planet> })
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <MainLayout>
             <h1 className="text-4xl font-bold text-center mb-8">Star Wars Planets</h1>
             <div className="mb-6">
                 <SearchFilter onSearch={handleSearch} />
@@ -74,6 +75,6 @@ export default function PlanetsClient({ data }: { data: SWAPIResponse<Planet> })
                     onPageChange={handlePageChange}
                 />
             </div>
-        </div>
+        </MainLayout>
     );
 }

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../components/Pagination';
 import SearchFilter from '../components/SearchFilter';
 import { Character, SWAPIResponse } from '../types/swapi';
+import MainLayout from '../components/MainLayout';
 
 export default function CharactersClient({ data }: { data: SWAPIResponse<Character> }) {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function CharactersClient({ data }: { data: SWAPIResponse<Charact
     useEffect(() => {
         const fetchCharacters = async () => {
             const res = await fetch(`/api/characters?page=${currentPage}&search=${search}`);
-            const newData = await res.json();
+            const newData: SWAPIResponse<Character> = await res.json();
             setCharacters(newData.results);
         };
         fetchCharacters();
@@ -39,7 +40,7 @@ export default function CharactersClient({ data }: { data: SWAPIResponse<Charact
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <MainLayout>
             <h1 className="text-4xl font-bold text-center mb-8">Star Wars Characters</h1>
             <div className="mb-6">
                 <SearchFilter onSearch={handleSearch} />
@@ -74,6 +75,6 @@ export default function CharactersClient({ data }: { data: SWAPIResponse<Charact
                     onPageChange={handlePageChange}
                 />
             </div>
-        </div>
+        </MainLayout>
     );
 }
